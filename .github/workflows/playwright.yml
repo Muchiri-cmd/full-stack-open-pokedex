@@ -4,9 +4,9 @@ on:
     branches: [ main,master ]
   pull_request:
     branches: [main, master]
+    types: [opened, synchronize]
 jobs:
   test:
-    timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,9 +17,18 @@ jobs:
         run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - name: Start Server
-        run: npm run start-prod & npx wait-on http://127.0.0.1:5000
-      - name: Run Playwright tests
+       
+      # Kill any existing process using port 5000 (Fixes EADDRINUSE)
+      - name: Ensure no process is running on port 5000
+        run: |
+          PID=$(lsof -t -i:5000 || true)
+          if [ -n "$PID" ]; then
+            echo "Killing process on port 5000: $PID"
+            kill -9 $PID
+          else
+            echo "No process found on port 5000"
+          fi
+      - name: Run Playwright Tests
         run: npx playwright test
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
@@ -27,7 +36,3 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
-          
-      
-
-

@@ -1,13 +1,16 @@
-name : Deployment Pipeline
-
+name: Deployment Pipeline
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches: [main]
+    types: [opened,synchronize]
 
 jobs:
   simple_deployment_pipeline:
-    runs-on: ubuntu-20.04
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -21,3 +24,7 @@ jobs:
         run: npm run build
       - name: Test
         run: npm run test
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.71.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
