@@ -1,5 +1,4 @@
-name : Deployment Pipeline
-
+name: Deployment Pipeline
 on:
   push:
     branches:
@@ -10,7 +9,8 @@ on:
 
 jobs:
   simple_deployment_pipeline:
-    runs-on: ubuntu-20.04
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
