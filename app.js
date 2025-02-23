@@ -16,6 +16,15 @@ app.get('/health', (req, res) => {
   res.send('ok')
 })
 
-app.listen(PORT, () => {
-  console.log(`server started on port ${PORT}`)
+const server = app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`)
+})
+
+// Gracefully handle process termination
+process.on('SIGTERM', () => {
+  console.log('Shutting down server...')
+  server.close(() => {
+    console.log('Server shut down')
+    process.exit(0)
+  })
 })

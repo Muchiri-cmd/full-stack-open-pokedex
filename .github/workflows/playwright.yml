@@ -18,7 +18,7 @@ jobs:
         run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - name: Kill previous process on port 5000 (if exists)
+      - name: Kill previous process (if running)
         run: kill -9 $(lsof -t -i:5000) 2>/dev/null || true
       - name: Start Server
         run: npm run start-prod &
