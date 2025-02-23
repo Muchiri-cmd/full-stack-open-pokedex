@@ -7,7 +7,6 @@ on:
     types: [opened, synchronize]
 jobs:
   test:
-    timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,18 +17,6 @@ jobs:
         run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - name: Kill any process using port 5000
-        run: |
-          lsof -ti:5000 | xargs -r kill -9
-          sleep 2
-      - name: Start Server
-        run: |
-          npm run start-prod &
-          echo $! > server.pid
-          # Wait for server to start
-          sleep 10
-          # Check if server is running
-          curl --retry 5 --retry-delay 2 --retry-connrefused http://localhost:5000/ || exit 1
       - name: Run Playwright Tests
         run: npx playwright test
       - uses: actions/upload-artifact@v4
@@ -38,10 +25,3 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
-      - name: Cleanup
-        if: always()
-        run: |
-          if [ -f server.pid ]; then
-            kill -9 $(cat server.pid) || true
-            rm server.pid
-          fi
