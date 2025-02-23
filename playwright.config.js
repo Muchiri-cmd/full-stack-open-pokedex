@@ -75,9 +75,13 @@ export default defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: {
     command: 'npm run start-prod',
-    url: 'http://127.0.0.1:5000',
-    timeout: 300000,
+    url: 'http://localhost:5000',
+    timeout: 600000,
     reuseExistingServer: !process.env.CI,
-  },
+    waitOnScheme: {
+      resources: ['http://127.0.0.1:5000'],
+      delay: 5000, // Wait 5 seconds before checking if the server is up
+    }
+  }
 })
 
