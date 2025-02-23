@@ -21,10 +21,12 @@ jobs:
       # Kill any existing process using port 5000 (Fixes EADDRINUSE)
       - name: Ensure no process is running on port 5000
         run: |
-          PID=$(lsof -t -i:5000) 
+          PID=$(lsof -t -i:5000 || true)
           if [ -n "$PID" ]; then
-            echo "Killing process on port 5000"
+            echo "Killing process on port 5000: $PID"
             kill -9 $PID
+          else
+            echo "No process found on port 5000"
           fi
       - name: Run Playwright Tests
         run: npx playwright test
