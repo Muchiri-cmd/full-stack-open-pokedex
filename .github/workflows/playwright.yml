@@ -18,11 +18,11 @@ jobs:
         run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - name: Kill previous process (if running)
-        run: kill -9 $(lsof -t -i:5000) 2>/dev/null || true
-      - name: Start Server
-        run: npm run start-prod &
-      - name: Run Playwright tests
+      - name: Start Server in the Background
+        run: npm run start-prod & echo $! > server.pid
+      - name: Wait for Server to be Ready
+        run: npx wait-on http://127.0.0.1:5000 --timeout 30000
+      - name: Run Playwright Tests
         run: npx playwright test
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
