@@ -18,7 +18,7 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Start Server
-        run: npm run start-prod &
+        run: npm run start-prod & npx wait-on http://127.0.0.1:5000
       - name: Run Playwright tests
         run: npx playwright test
       - uses: actions/upload-artifact@v4
