@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test'
 import process from 'process'
 
 /**
@@ -79,5 +79,5 @@ export default defineConfig({
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,
   },
-});
+})
 
