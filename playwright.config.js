@@ -76,7 +76,7 @@ export default defineConfig({
   webServer: {
     command: 'npm run start-prod',
     url: 'http://127.0.0.1:5000',
-    timeout: 120 * 1000,
+    timeout: 300000,
     reuseExistingServer: !process.env.CI,
   },
 })
