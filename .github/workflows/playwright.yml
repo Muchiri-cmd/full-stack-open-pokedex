@@ -18,7 +18,9 @@ jobs:
         run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - name: Start Server in the Background
+      - name: Kill any process using port 5000
+        run: kill -9 $(lsof -t -i:5000) 2>/dev/null || true
+      - name: Start Server
         run: npm run start-prod & echo $! > server.pid
       - name: Run Playwright Tests
         run: npx playwright test
@@ -28,7 +30,5 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
-          
-      
 
 
