@@ -17,6 +17,14 @@ jobs:
         run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+       # Kill any existing process using port 5000 (Fixes EADDRINUSE)
+       - name: Ensure no process is running on port 5000
+       run: |
+         PID=$(lsof -t -i:5000) 
+         if [ -n "$PID" ]; then
+           echo "Killing process on port 5000"
+           kill -9 $PID
+         fi
       - name: Run Playwright Tests
         run: npx playwright test
       - uses: actions/upload-artifact@v4
