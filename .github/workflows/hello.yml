@@ -10,4 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Say Hello  
-        run: echo "Hello, World!" 
+        run: |
+          echo "Hello, World!" 
+          date
+          ls
